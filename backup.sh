@@ -3,17 +3,21 @@
 # This script takes CyberPanel backups and upload to the Google Drive
 # gdrive script is adopted from https://github.com/prasmussen/gdrive
 # Author : Arun D
-# Rev : 1.0
+# Rev : 2.0
 # To-Do: Cron job details
 
 # Checking whether the gdrive is already installed
 if [ ! -e /usr/local/bin/gdrive ]
 then
 	echo "gdrive not found. Installing it"
-	wget -O gdrive "https://docs.google.com/uc?id=0B3X9GlR6EmbnQ0FtZmJJUXEyRTA&export=download"
-    wait
+   	wget -O gdrive "https://docs.google.com/uc?id=0B3X9GlR6EmbnQ0FtZmJJUXEyRTA&export=download"
+        wait
 	sudo install gdrive /usr/local/bin/gdrive
 	wait
+	echo "Configure your Google Drive connection "
+        gdrive about
+        echo "gdrive installed and linked to your account. Please edit the G_ID variable with the Directory ID and re-run the script"
+        exit;
 fi
 
 echo "gdrive installed and linked to your account"
@@ -39,7 +43,10 @@ wait
 # Executing a new CyberPanel's Local Backup Script instance
 
 echo "Calling CybperPanel Backup Script"
-python /usr/local/CyberCP/plogical/backupScheduleLocal.py
+ls -1 /home -Icyberpanel -Idocker -Ibackup -Ilscache -Ivmail | while read user; do
+      echo "--- Taking backup of $user ---";
+      cyberpanel createBackup --domainName $user > /dev/null
+done
 wait
 
 # Copying tar.gz backup files from the default backup location to the script's backup location
