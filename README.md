@@ -1,2 +1,2 @@
-# cyberpanel-to-googledrive
-Bash script to automate  uploading the backups to the Google drive
+# cyberpanel-backups-to-google-drive
+Bash script to automate uploading the latest CyberPanel backups to the Google drive
